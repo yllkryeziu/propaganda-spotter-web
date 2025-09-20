@@ -1,73 +1,76 @@
-# Welcome to your Lovable project
+# Propaganda Spotter AI
 
-## Project info
+Propaganda Spotter is a powerful web application that uses a multi-modal AI model to detect, analyze, and highlight propaganda techniques in images. Upload an image, and the tool will identify elements related to techniques like Leader Appeal, Patriotic Symbolism, and Us vs. Them framing, providing a detailed analysis of how the imagery is designed to influence viewers.
 
-**URL**: https://lovable.dev/projects/720f57b9-f2d1-4953-8eb0-f04472b824dd
+![Application Screenshot](./example.png)
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- **AI-Powered Analysis:** Leverages a CLIP-based model to analyze images for a dozen pre-defined propaganda concepts.
+- **Explainable AI (XAI):** Uses Grad-CAM to generate attention maps, showing *which* parts of the image the model focused on for its analysis.
+- **Interactive Bounding Boxes:** The detected propaganda elements are highlighted with bounding boxes directly on the image.
+- **Resizable and Editable Boxes:** Users can resize, move, and edit the labels of the bounding boxes to refine the analysis.
+- **Detailed Textual Analysis:** Provides a comprehensive summary of the detected techniques, explaining their purpose and psychological impact.
+- **Modern Frontend:** A clean and responsive user interface built with React, TypeScript, and Shadcn UI.
+- **FastAPI Backend:** A robust and fast Python backend serving the AI model.
 
-**Use Lovable**
+## Tech Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/720f57b9-f2d1-4953-8eb0-f04472b824dd) and start prompting.
+- **Frontend:**
+  - React & TypeScript
+  - Vite
+  - Tailwind CSS
+  - Shadcn UI
+  - `react-rnd` for interactive boxes
+  - `react-markdown` for text rendering
+- **Backend:**
+  - Python & FastAPI
+  - PyTorch
+  - Hugging Face Transformers (CLIP, BLIP)
+  - `torch-cam` for Grad-CAM implementation
+  - Uvicorn
 
-Changes made via Lovable will be committed automatically to this repo.
+## How It Works
 
-**Use your preferred IDE**
+1.  **Image Upload:** The user uploads an image to the React frontend.
+2.  **API Request:** The frontend sends the image to the FastAPI backend.
+3.  **Image Captioning:** A BLIP model generates a general, descriptive caption of the image for context.
+4.  **Propaganda Detection:** A CLIP model calculates the similarity between the image and a list of defined propaganda concepts (e.g., "leader worship imagery", "patriotic symbols").
+5.  **Attention Map Generation (Grad-CAM):** For the highest-scoring concepts, `torch-cam` is used to generate Grad-CAM heatmaps. These maps visualize the specific regions of the image that activated the model for that concept.
+6.  **Bounding Box Creation:** The application finds contours in the high-attention areas of the heatmaps to create bounding boxes.
+7.  **Analysis Generation:** A detailed textual summary is constructed based on the detected concepts and their descriptions.
+8.  **Response to Frontend:** The backend sends the caption, bounding boxes, and analysis text back to the frontend to be displayed to the user.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Getting Started
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Prerequisites
 
-Follow these steps:
+- Python 3.8+
+- Node.js 16+
+- `npm`
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### 1. Clone the Repository
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```bash
+git clone https://github.com/your-username/propaganda-spotter-web.git
+cd propaganda-spotter-web
 ```
 
-**Edit a file directly in GitHub**
+### 2. Run the Setup Script
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+This script will install all the necessary frontend and backend dependencies. It only needs to be run once.
 
-**Use GitHub Codespaces**
+```bash
+./setup.sh
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### 3. Start the Application
 
-## What technologies are used for this project?
+This will start both the backend and frontend development servers.
 
-This project is built with:
+```bash
+./run.sh
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/720f57b9-f2d1-4953-8eb0-f04472b824dd) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- The frontend will be available at `http://localhost:5173` (or another port if 5173 is busy).
+- The backend API will be running at `http://localhost:8000`.
