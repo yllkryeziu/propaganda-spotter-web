@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { ImageUpload } from "@/components/ImageUpload";
-import { ChatInterface } from "@/components/ChatInterface";
 import { ImageAnalysis } from "@/components/ImageAnalysis";
 import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
 
 // Mock data for demonstration
 const mockHighlightBoxes = [
@@ -66,7 +66,7 @@ const Index = () => {
     setShowAnalysis(false);
   };
 
-  const handleAnalyzeImage = async (message: string) => {
+  const handleAnalyzeImage = async () => {
     if (!uploadedImage) {
       toast({
         title: "No image uploaded",
@@ -113,10 +113,17 @@ const Index = () => {
               uploadedImage={uploadedImage}
               onClearImage={handleClearImage}
             />
-            <ChatInterface
-              onAnalyzeImage={handleAnalyzeImage}
-              isAnalyzing={isAnalyzing}
-            />
+            {uploadedImage && (
+              <div className="flex justify-center">
+                <Button 
+                  onClick={handleAnalyzeImage}
+                  disabled={isAnalyzing}
+                  className="w-full max-w-sm"
+                >
+                  {isAnalyzing ? "Analyzing..." : "Analyze for Propaganda"}
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Right column */}
