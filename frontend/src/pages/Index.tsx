@@ -155,7 +155,6 @@ const Index = () => {
           <ImageAnalysis
             imageUrl={uploadedImage}
             highlightBoxes={highlightBoxes}
-            setHighlightBoxes={setHighlightBoxes}
             analysisText={analysisResult ? analysisResult.analysis_text : ""}
           />
         </div>

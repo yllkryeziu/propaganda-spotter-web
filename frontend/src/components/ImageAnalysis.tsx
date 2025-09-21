@@ -1,9 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from 'react-markdown';
-import { Rnd } from "react-rnd";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 
 interface HighlightBox {
   id: string;
@@ -18,19 +16,16 @@ interface HighlightBox {
 interface ImageAnalysisProps {
   imageUrl: string | null;
   highlightBoxes: HighlightBox[];
-  setHighlightBoxes: (boxes: HighlightBox[]) => void;
   analysisText: string;
 }
 
 export const ImageAnalysis = ({ 
   imageUrl, 
   highlightBoxes, 
-  setHighlightBoxes,
   analysisText, 
 }: ImageAnalysisProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
-  const [editingLabel, setEditingLabel] = useState<string | null>(null);
   const imageRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
@@ -52,12 +47,6 @@ export const ImageAnalysis = ({
     setImageLoaded(true);
   };
 
-  const handleLabelChange = (boxId: string, newLabel: string) => {
-    const updatedBoxes = highlightBoxes.map(box => 
-      box.id === boxId ? { ...box, label: newLabel } : box
-    );
-    setHighlightBoxes(updatedBoxes);
-  };
 
   if (!imageUrl) {
     return (
@@ -85,68 +74,26 @@ export const ImageAnalysis = ({
             onLoad={handleImageLoad}
           />
           
-          {imageLoaded && highlightBoxes.map((box, index) => (
-            <Rnd
+          {imageLoaded && highlightBoxes.map((box) => (
+            <div
               key={box.id}
-              size={{
-                width: (box.width / 100) * imageDimensions.width,
-                height: (box.height / 100) * imageDimensions.height,
+              className="absolute border-2 pointer-events-none"
+              style={{
+                left: `${(box.x / 100) * imageDimensions.width}px`,
+                top: `${(box.y / 100) * imageDimensions.height}px`,
+                width: `${(box.width / 100) * imageDimensions.width}px`,
+                height: `${(box.height / 100) * imageDimensions.height}px`,
+                borderColor: box.color,
+                backgroundColor: `${box.color}20`,
               }}
-              position={{
-                x: (box.x / 100) * imageDimensions.width,
-                y: (box.y / 100) * imageDimensions.height,
-              }}
-              onDragStop={(e, d) => {
-                const newBoxes = [...highlightBoxes];
-                newBoxes[index] = {
-                  ...newBoxes[index],
-                  x: (d.x / imageDimensions.width) * 100,
-                  y: (d.y / imageDimensions.height) * 100,
-                };
-                setHighlightBoxes(newBoxes);
-              }}
-              onResizeStop={(e, direction, ref, delta, position) => {
-                const newBoxes = [...highlightBoxes];
-                newBoxes[index] = {
-                  ...newBoxes[index],
-                  width: (parseFloat(ref.style.width) / imageDimensions.width) * 100,
-                  height: (parseFloat(ref.style.height) / imageDimensions.height) * 100,
-                  x: (position.x / imageDimensions.width) * 100,
-                  y: (position.y / imageDimensions.height) * 100,
-                };
-                setHighlightBoxes(newBoxes);
-              }}
-              className="border-2"
-              style={{ borderColor: box.color, backgroundColor: `${box.color}20` }}
             >
-              <div onDoubleClick={() => setEditingLabel(box.id)} className="w-full h-full">
-                {editingLabel === box.id ? (
-                  <Input
-                    type="text"
-                    defaultValue={box.label}
-                    className="bg-white/80 text-black text-xs p-1"
-                    onBlur={(e) => {
-                      handleLabelChange(box.id, e.target.value);
-                      setEditingLabel(null);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        handleLabelChange(box.id, e.currentTarget.value);
-                        setEditingLabel(null);
-                      }
-                    }}
-                    autoFocus
-                  />
-                ) : (
-                  <Badge
-                    className="absolute -top-7 left-0 text-xs cursor-pointer"
-                    style={{ backgroundColor: box.color, color: 'white' }}
-                  >
-                    {box.label}
-                  </Badge>
-                )}
-              </div>
-            </Rnd>
+              <Badge
+                className="absolute -top-7 left-0 text-xs"
+                style={{ backgroundColor: box.color, color: 'white' }}
+              >
+                {box.label}
+              </Badge>
+            </div>
           ))}
         </div>
 

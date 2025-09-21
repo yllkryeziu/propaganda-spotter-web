@@ -8,8 +8,7 @@ Propaganda Spotter is a powerful web application that uses a multi-modal AI mode
 
 - **AI-Powered Analysis:** Leverages a CLIP-based model to analyze images for a dozen pre-defined propaganda concepts.
 - **Explainable AI (XAI):** Uses Grad-CAM to generate attention maps, showing *which* parts of the image the model focused on for its analysis.
-- **Interactive Bounding Boxes:** The detected propaganda elements are highlighted with bounding boxes directly on the image.
-- **Resizable and Editable Boxes:** Users can resize, move, and edit the labels of the bounding boxes to refine the analysis.
+- **Visual Bounding Boxes:** The detected propaganda elements are highlighted with static bounding boxes directly on the image for clear visualization.
 - **Detailed Textual Analysis:** Provides a comprehensive summary of the detected techniques, explaining their purpose and psychological impact.
 - **Modern Frontend:** A clean and responsive user interface built with React, TypeScript, and Shadcn UI.
 - **FastAPI Backend:** A robust and fast Python backend serving the AI model.
@@ -21,7 +20,6 @@ Propaganda Spotter is a powerful web application that uses a multi-modal AI mode
   - Vite
   - Tailwind CSS
   - Shadcn UI
-  - `react-rnd` for interactive boxes
   - `react-markdown` for text rendering
 - **Backend:**
   - Python & FastAPI
